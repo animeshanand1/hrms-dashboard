@@ -1,0 +1,20 @@
+{
+  "admin": {
+    "name": "Alice Admin",
+    "email": "admin@example.com",
+    "role": "admin",
+    "department": "Operations"
+  },
+  "hr": {
+    "name": "Harry HR",
+    "email": "hr@example.com",
+    "role": "hr",
+    "department": "People"
+  },
+  "employee": {
+    "name": "Eve Employee",
+    "email": "employee@example.com",
+    "role": "employee",
+    "department": "Engineering"
+  }
+}

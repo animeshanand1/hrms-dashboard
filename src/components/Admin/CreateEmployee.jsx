@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../Auth/LoginPage.module.css';
 import adminStyles from './CreateEmployee.module.css';
+import employeesData from '../../data/employees.json';
 
 const CreateEmployee = () => {
   const [form, setForm] = useState({
@@ -32,9 +33,35 @@ const CreateEmployee = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: call admin API to create employee and send invite email
-    console.log('Creating employee:', form);
+    // create a new employee object and store in sessionStorage
+    const existing = JSON.parse(sessionStorage.getItem('hrms_employees')) || employeesData || [];
+
+    const genId = () => {
+      if (form.employeeId) return form.employeeId;
+      // attempt to find numeric suffixes like EMP001
+      const nums = existing.map(e => {
+        const m = (e.id || '').match(/(\d+)$/);
+        return m ? parseInt(m[1], 10) : 0;
+      });
+      const max = nums.length ? Math.max(...nums) : 0;
+      return `EMP${String(max + 1).padStart(3, '0')}`;
+    };
+
+    const newEmp = {
+      id: genId(),
+      name: form.fullName || 'New Employee',
+      designation: form.jobTitle || '',
+      department: form.department || '',
+      dob: form.startDate || '',
+      image: `https://i.pravatar.cc/150?u=${Date.now()}`,
+    };
+
+    const updated = [newEmp, ...existing];
+    sessionStorage.setItem('hrms_employees', JSON.stringify(updated));
+    console.log('Created employee (saved to session):', newEmp);
     setCreated(true);
+    // clear some fields
+    setForm(prev => ({ ...prev, fullName: '', email: '', employeeId: '', jobTitle: '', department: '', startDate: '' }));
   };
 
   return (

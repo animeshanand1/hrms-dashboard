@@ -1,0 +1,42 @@
+[
+  {
+    "id": "EMP001",
+    "name": "Jane Doe",
+    "designation": "Software Engineer",
+    "department": "Engineering",
+    "dob": "1992-06-15",
+    "image": "https://i.pravatar.cc/150?img=12"
+  },
+  {
+    "id": "EMP002",
+    "name": "Carlos Reyes",
+    "designation": "Product Manager",
+    "department": "Product",
+    "dob": "1988-11-02",
+    "image": "https://i.pravatar.cc/150?img=5"
+  },
+  {
+    "id": "EMP003",
+    "name": "Aisha Khan",
+    "designation": "HR Specialist",
+    "department": "People",
+    "dob": "1990-03-22",
+    "image": "https://i.pravatar.cc/150?img=20"
+  },
+  {
+    "id": "EMP004",
+    "name": "Liam Chen",
+    "designation": "Data Analyst",
+    "department": "Analytics",
+    "dob": "1994-09-08",
+    "image": "https://i.pravatar.cc/150?img=30"
+  },
+  {
+    "id": "EMP005",
+    "name": "Maya Patel",
+    "designation": "UX Designer",
+    "department": "Design",
+    "dob": "1991-01-17",
+    "image": "https://i.pravatar.cc/150?img=7"
+  }
+]

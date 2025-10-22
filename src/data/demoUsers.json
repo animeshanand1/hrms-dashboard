@@ -1,20 +1,26 @@
 {
   "admin": {
+    "id": "u_admin",
     "name": "Alice Admin",
     "email": "admin@example.com",
     "role": "admin",
-    "department": "Operations"
+    "department": "Operations",
+    "image": "https://i.pravatar.cc/150?u=admin"
   },
   "hr": {
+    "id": "u_hr",
     "name": "Harry HR",
     "email": "hr@example.com",
     "role": "hr",
-    "department": "People"
+    "department": "People",
+    "image": "https://i.pravatar.cc/150?u=hr"
   },
   "employee": {
+    "id": "u_employee",
     "name": "Eve Employee",
     "email": "employee@example.com",
     "role": "employee",
-    "department": "Engineering"
+    "department": "Engineering",
+    "image": "https://i.pravatar.cc/150?u=employee"
   }
 }

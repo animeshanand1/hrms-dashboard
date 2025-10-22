@@ -24,9 +24,13 @@ const LoginPage = () => {
   const demoLogin = (role) => {
     const user = demoUsers[role];
     if (!user) return;
+    // ensure a stable id exists for user objects
+    if (!user.id) user.id = `u_${role}_${Date.now()}`;
     dispatch(setUser(user));
-    // navigate to admin dashboard if admin
+    // navigate based on role
     if (user.role === 'admin') navigate('/admin/create-employee');
+    else if (user.role === 'hr') navigate('/admin/employees');
+    else navigate('/my/leave');
   };
 
   return (

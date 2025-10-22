@@ -21,7 +21,7 @@ const CreateEmployee = () => {
     probationMonths: '',
     password: '',
     sendInvite: true,
-    autoGeneratePassword: true,
+    picture: '',
   });
 
   const [created, setCreated] = useState(false);
@@ -29,6 +29,16 @@ const CreateEmployee = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setForm(prev => ({ ...prev, picture: reader.result }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = (e) => {
@@ -53,7 +63,7 @@ const CreateEmployee = () => {
       designation: form.jobTitle || '',
       department: form.department || '',
       dob: form.startDate || '',
-      image: `https://i.pravatar.cc/150?u=${Date.now()}`,
+      image: form.picture || `https://i.pravatar.cc/150?u=${Date.now()}`,
     };
 
     const updated = [newEmp, ...existing];
@@ -61,7 +71,7 @@ const CreateEmployee = () => {
     console.log('Created employee (saved to session):', newEmp);
     setCreated(true);
     // clear some fields
-    setForm(prev => ({ ...prev, fullName: '', email: '', employeeId: '', jobTitle: '', department: '', startDate: '' }));
+    setForm(prev => ({ ...prev, fullName: '', email: '', employeeId: '', jobTitle: '', department: '', startDate: '', picture: '' }));
   };
 
   return (
@@ -86,6 +96,14 @@ const CreateEmployee = () => {
                     <div className={adminStyles.inputWrapper}>
                       <label className={adminStyles.floatingLabel} htmlFor="fullName">Full name</label>
                       <input id="fullName" name="fullName" value={form.fullName} onChange={handleChange} placeholder="" className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} required />
+                    </div>
+                  </div>
+
+                  <div className={`${adminStyles.inputGroup} ${form.picture ? adminStyles.filledGroup : ''}`}>
+                    <div className={adminStyles.inputWrapper}>
+                      <label className={adminStyles.floatingLabel} htmlFor="picture">Photo</label>
+                      <input id="picture" name="picture" type="file" accept="image/*" onChange={handleFileChange} className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} />
+                      {form.picture && <img src={form.picture} alt="preview" style={{marginTop:8, width:84, height:84, borderRadius:10, objectFit:'cover'}} />}
                     </div>
                   </div>
 

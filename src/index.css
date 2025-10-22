@@ -12,3 +12,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* dark theme variables */
+.theme-dark {
+  --primary-color: #7c3aed;
+  --primary-hover-color: #5b21b6;
+  --text-color: #e6eef8;
+  --label-color: #cbd5e1;
+  --background-color: #07112b;
+  --panel-background: #071a36;
+  --border-color: rgba(255,255,255,0.06);
+}
+
+body { background: var(--background-color); color: var(--text-color); font-family: var(--font-family); }

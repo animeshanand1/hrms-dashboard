@@ -38,6 +38,7 @@ const Sidebar = ({ collapsed = false, setCollapsed = () => {}, mobileOpen = fals
                   <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/admin/employees') ? styles.active : ''}`} to="/admin/employees"><FiList /> {!collapsed && 'List employees'}</Link></div>
                   <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/admin/archive') ? styles.active : ''}`} to="/admin/archive"><FiArchive /> {!collapsed && 'Archive'}</Link></div>
                   <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/admin/payslips') ? styles.active : ''}`} to="/admin/payslips"><FiFileText /> {!collapsed && 'Payslips'}</Link></div>
+                  <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/admin/attendance') ? styles.active : ''}`} to="/admin/attendance"><FiCalendar /> {!collapsed && 'Attendance Records'}</Link></div>
                 </div>
             )}
           </div>
@@ -51,6 +52,12 @@ const Sidebar = ({ collapsed = false, setCollapsed = () => {}, mobileOpen = fals
             <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/leave/requests') ? styles.active : ''}`} to="/leave/requests"><FiClock /> {!collapsed && 'Leave requests'}</Link></div>
             <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/leave/attendance') ? styles.active : ''}`} to="/leave/attendance"><FiCalendar /> {!collapsed && 'Attendance'}</Link></div>
             <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/leave/policies') ? styles.active : ''}`} to="/leave/policies"><FiBook /> {!collapsed && 'Policies'}</Link></div>
+            {(user?.role === 'admin' || user?.role === 'hr') && (
+              <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/leave/calendar') ? styles.active : ''}`} to="/leave/calendar"><FiCalendar /> {!collapsed && 'Calendar Management'}</Link></div>
+            )}
+            {user?.role === 'employee' && (
+              <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/my/monthly-summary') ? styles.active : ''}`} to="/my/monthly-summary"><FiFileText /> {!collapsed && 'Monthly Summary'}</Link></div>
+            )}
           </div>
         </div>
 

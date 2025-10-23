@@ -1,0 +1,381 @@
+
+.container { padding: 24px; }
+
+.headerRow { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+.title { font-size:22px; font-weight:800; color:var(--text-primary,#0b1220); }
+
+.formCard {
+  background: linear-gradient(180deg,#ffffff,#fbfdff);
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(2,6,23,0.06);
+  margin-bottom: 30px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+.meta {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e6eef5;
+  background: #fff;
+  min-width: 140px;
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+.input:focus {
+  box-shadow: 0 8px 28px rgba(99,102,241,0.12);
+  border-color: #6366f1;
+}
+.reasonInput {
+  flex: 1;
+}
+.createBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(90deg,#06b6d4,#6366f1);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: transform .14s ease, box-shadow .14s ease;
+  font-weight: 600;
+}
+.createBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(99,102,241,0.12);
+}
+.errorMsg {
+  color: #ef4444;
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: #fff1f2;
+  border-radius: 8px;
+}
+
+.formInner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+.input, .select {
+  height: 46px;
+  width: 100%;
+}
+.select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6eef5;
+  background: #fff;
+}
+.fieldError {
+  color: #b91c1c;
+  font-size: 12px;
+  margin-top: 6px;
+}
+.createBtn:disabled {
+  opacity: 0.6;
+  transform: none;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.daysBadge {
+  font-size: 12px;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 6px 8px;
+  border-radius: 10px;
+  margin-left: 8px;
+}
+
+.listGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+/* Remove multi-column layout for better readability */
+.card {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.card {
+  background: linear-gradient(180deg,#ffffff,#fbfdff);
+  border-radius:14px; padding:14px; box-shadow: 0 18px 48px rgba(2,6,23,0.06);
+  display:flex; flex-direction:column; gap:10px; transition: transform .14s ease, box-shadow .14s ease;
+  position:relative; overflow:hidden;
+}
+.card {
+  position: relative;
+  border: 1px solid #e6eef5;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+
+.card[data-status="Pending"]::before { background: #f59e0b; }
+.card[data-status="Approved"]::before { background: #10b981; }
+.card[data-status="Rejected"]::before { background: #ef4444; }
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+}
+
+.range {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 16px;
+}
+
+.reasonBox {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.reasonLabel {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.reasonText {
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+.leaveType {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.typeLabel {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.typeValue {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.ownerRow { display:flex; align-items:center; gap:10px; margin-top:8px; }
+.avatar { width:36px; height:36px; border-radius:8px; object-fit:cover; border:2px solid #fff; box-shadow: 0 6px 18px rgba(2,6,23,0.06); }
+.ownerName { font-weight:700; font-size:13px; color:#0b1220; }
+.ownerId { font-size:12px; color:#64748b; }
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.adminActions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.btnDanger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btnPrimary {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.btnWarn {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.btnGhost {
+  background: transparent;
+  color: #0f172a;
+  border: 1px solid #e6eef5;
+}
+
+.status {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  align-items: center;
+  gap: 6px;
+}
+
+.pending {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.approved {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.rejected {
+  background: #fff1f2;
+  color: #9f1239;
+}
+
+.metaInfo {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dateSubmitted {
+  font-size: 13px;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statusUpdate {
+  font-size: 12px;
+  color: #475569;
+  background: #f8fafc;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Modal styles */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(2,6,23,0.2);
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 16px 0;
+}
+
+.modalBody {
+  margin-bottom: 24px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
+  padding: 12px;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* Rejection remark display in card */
+.rejectionRemark {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fff1f2;
+  border-radius: 8px;
+  border-left: 3px solid #ef4444;
+}
+
+.rejectionLabel {
+  font-size: 13px;
+  color: #9f1239;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.rejectionText {
+  color: #881337;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cardFooter { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:6px; }
+.muted { color:#94a3b8; font-size:13px; }
+
+.emptyState { padding:18px; border-radius:12px; background:#f8fafc; color:#475569; font-weight:600; }

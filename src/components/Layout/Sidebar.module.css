@@ -10,6 +10,8 @@
   transition: width 220ms ease, background .2s ease, transform .22s ease;
   overflow: auto;
   border-right: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+  z-index: 1000; 
 }
 
 .collapsed { width: 70px; }
@@ -67,7 +69,6 @@
   background: linear-gradient(90deg, rgba(124,58,237,0.12), rgba(6,182,212,0.06));
 }
 
-/* Dark mode: preserve the darker subtle styling (no light gradient) */
 :global(body.theme-dark) .sidebar .subItem {
   background: none;
 }

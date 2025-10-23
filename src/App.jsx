@@ -10,6 +10,7 @@ import Payslips from './pages/Admin/Payslips'
 import LeaveRequests from './pages/Leave/LeaveRequests'
 import AttendanceList from './pages/Leave/AttendanceList'
 import LeavePolicies from './pages/Leave/LeavePolicies'
+import LeaveDashboard from './pages/User/LeaveDashboard'
 import { AuthProvider } from './context/AuthContext'
 import RoleRoute from './components/Auth/RoleRoute'
 import Unauthorized from './components/Auth/Unauthorized'
@@ -46,6 +47,11 @@ function AppContent() {
             <Route path="/leave/requests" element={<LeaveRequests />} />
             <Route path="/leave/attendance" element={<AttendanceList />} />
             <Route path="/leave/policies" element={<LeavePolicies />} />
+            <Route path="/my/leave" element={
+              <RoleRoute allowedRoles={["employee","admin","hr"]}>
+                <LeaveDashboard />
+              </RoleRoute>
+            } />
             <Route path="/admin/payslips" element={
               <RoleRoute allowedRoles={["admin","hr","employee"]}>
                 <Payslips />

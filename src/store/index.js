@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './authSlice'
+import settingsReducer from './settingsSlice'
 
 // Try to rehydrate auth from localStorage to keep demo login across reloads
 const preloadedAuth = (() => {
@@ -15,6 +16,7 @@ const preloadedAuth = (() => {
 export const store = configureStore({
   reducer: {
     auth: authReducer
+    , settings: settingsReducer
   },
   preloadedState: preloadedAuth
 })
@@ -26,6 +28,11 @@ store.subscribe(() => {
     const user = state.auth.user;
     if (user) localStorage.setItem('reduxAuth', JSON.stringify(user));
     else localStorage.removeItem('reduxAuth');
+    // persist settings to localStorage
+    try {
+      const settings = state.settings;
+      if (settings) localStorage.setItem('hrms_settings_v1', JSON.stringify(settings));
+    } catch {}
   } catch {
     // ignore
   }

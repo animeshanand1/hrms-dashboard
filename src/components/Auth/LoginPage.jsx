@@ -1,5 +1,6 @@
 
 import React,{ useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import styles from './LoginPage.module.css';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
@@ -32,6 +33,7 @@ const LoginPage = () => {
     else if (user.role === 'hr') navigate('/admin/employees');
     else navigate('/my/leave');
   };
+  const settings = useSelector(s => s.settings || { siteName: 'Your Company', logoUrl: '', tagline: 'People-first HR management' });
 
   return (
     <div className={styles.wrapper}>
@@ -39,18 +41,26 @@ const LoginPage = () => {
         <aside className={styles.leftPanel}>
           <div className={styles.brandWrapper}>
             <div className={styles.brandIcon}>
-              <FaBuilding size={48} />
+              {settings.logoUrl ? (
+                <img src={settings.logoUrl} alt={settings.siteName} style={{width:72,height:72,objectFit:'contain'}} />
+              ) : (
+                <FaBuilding size={48} />
+              )}
             </div>
-            <h2 className={styles.brandTitle}>Your Company</h2>
-            <p className={styles.brandSubtitle}>People-first HR management</p>
+            <h2 className={styles.brandTitle}>{settings.siteName || 'Your Company'}</h2>
+            <p className={styles.brandSubtitle}>{settings.tagline || 'People-first HR management'}</p>
           </div>
         </aside>
 
         <main className={styles.rightPanel}>
           <div className={styles.formContainer}>
             <div className={styles.header}>
-              <div className={styles.logo}></div>
-              <span className={styles.logoText}>HRMS</span>
+              <div className={styles.logo}>
+                {settings.logoUrl ? (
+                  <img src={settings.logoUrl} alt={settings.siteName} style={{height:40,objectFit:'contain'}} />
+                ) : null}
+              </div>
+              <span className={styles.logoText}>{settings.siteName || 'HRMS'}</span>
             </div>
 
             <h1 className={styles.title}>Welcome back</h1>

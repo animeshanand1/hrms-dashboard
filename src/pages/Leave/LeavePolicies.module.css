@@ -1,0 +1,153 @@
+.container {
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+  color: #111827; /* neutral-900 */
+}
+.header {
+  margin-bottom: 12px;
+}
+.subtitle {
+  color: #6b7280; /* neutral-500 */
+  margin-top: 4px;
+}
+.toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.search {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+.select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+}
+.primary {
+  background: #0ea5a4; /* teal-500 */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.secondary {
+  background: transparent;
+  color: #0f172a;
+  border: 1px solid #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: button;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.empty {
+  padding: 20px;
+  text-align: center;
+  color: #6b7280;
+}
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e6edf0;
+  padding: 12px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+.cardLeft {
+  max-width: 78%;
+}
+.cardRight {
+  display: flex;
+  gap: 8px;
+}
+.title {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+}
+.meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+.badge {
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+.date {
+  color: #6b7280;
+  font-size: 13px;
+}
+.excerpt {
+  margin: 0;
+  color: #374151;
+}
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+.modal {
+  background: white;
+  padding: 18px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 700px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+.form label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  margin-top: 6px;
+}
+.form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+.metaRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.description {
+  margin-top: 12px;
+  color: #374151;
+}
+.dateSmall {
+  font-size: 12px;
+  color: #6b7280;
+}

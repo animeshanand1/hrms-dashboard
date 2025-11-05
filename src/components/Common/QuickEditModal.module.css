@@ -6,22 +6,98 @@
   justify-content: center;
   background: rgba(2,6,23,0.45);
   z-index: 4000;
+  padding: 20px; /* ensure some spacing on very small viewports */
 }
 
 .modal {
-  width: 520px;
+  width: min(720px, 95vw);
+  max-width: 720px;
   background: #fff;
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 18px 60px rgba(2,6,23,0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 80px); /* keep some space from edges */
+  overflow: hidden; /* keep footer visible and make body scroll */
 }
 
-.header { display:flex; align-items:center; justify-content:space-between; }
-.close { background:transparent; border:none; font-size:18px; cursor:pointer }
-.body { margin-top:12px; display:flex; flex-direction:column; gap:10px }
-.row { display:flex; flex-direction:column; }
-.row label { font-size:12px; color:#475569; margin-bottom:6px }
-.row input { padding:8px 10px; border-radius:8px; border:1px solid #e6eef8 }
-.footer { margin-top:14px; display:flex; gap:8px; justify-content:flex-end }
-.btn { padding:8px 12px; border-radius:8px; border:1px solid #e5e7eb; background:#fff }
-.btnPrimary { padding:8px 12px; border-radius:8px; border:none; background:#4f46e5; color:#fff }
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.close {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.body {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  flex: 1 1 auto; /* grow to available space */
+  overflow: auto; /* scroll when content is too tall */
+  padding-right: 6px; /* room for scrollbar */
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+}
+
+.full { width: 100%; box-sizing: border-box; }
+
+.row label {
+  font-size: 12px;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.row input {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e6eef8;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.footer {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-shrink: 0; /* keep footer visible */
+  padding-top: 8px;
+  border-top: 1px solid rgba(15,23,42,0.03);
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.btnPrimary {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #4f46e5;
+  color: #fff;
+}
+
+/* Two-column layout on wider screens to reduce vertical scrolling */
+@media (min-width: 700px) {
+  .body {
+    grid-template-columns: 1fr 1fr;
+  }
+  /* Let fields that should take full width span both columns (e.g., long text) */
+  .body .row.full {
+    grid-column: 1 / -1;
+  }
+}

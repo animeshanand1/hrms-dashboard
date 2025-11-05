@@ -147,3 +147,9 @@
   color: #6b7280;
   margin-top: 24px;
 }
+
+.fieldError {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}

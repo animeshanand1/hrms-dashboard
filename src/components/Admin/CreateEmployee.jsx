@@ -25,6 +25,7 @@ const CreateEmployee = () => {
   });
 
   const [created, setCreated] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,14 +42,83 @@ const CreateEmployee = () => {
     reader.readAsDataURL(file);
   };
 
+  // --- sanitization & validation helpers ---
+  const stripTags = (s) => (s && typeof s === 'string') ? s.replace(/<[^>]*>/g, '') : s;
+  const sanitizeString = (s) => {
+    if (s === undefined || s === null) return '';
+    return stripTags(String(s)).trim().replace(/\s+/g, ' ');
+  };
+
+  const isValidEmail = (s) => {
+    if (!s) return false;
+    // email regex
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+  };
+
+  const isValidDate = (d) => {
+    if (!d) return false;
+    const dt = new Date(d);
+    return !Number.isNaN(dt.getTime());
+  };
+
+  const sanitizeForm = (raw) => {
+    return {
+      fullName: sanitizeString(raw.fullName),
+      email: sanitizeString(raw.email).toLowerCase(),
+      employeeId: sanitizeString(raw.employeeId),
+      role: sanitizeString(raw.role),
+      department: sanitizeString(raw.department),
+      jobTitle: sanitizeString(raw.jobTitle),
+      manager: sanitizeString(raw.manager),
+      employmentType: sanitizeString(raw.employmentType),
+      location: sanitizeString(raw.location),
+      phone: sanitizeString(raw.phone),
+      address: sanitizeString(raw.address),
+      startDate: sanitizeString(raw.startDate),
+      salary: sanitizeString(raw.salary),
+      probationMonths: sanitizeString(raw.probationMonths),
+      password: sanitizeString(raw.password),
+      sendInvite: !!raw.sendInvite,
+      picture: raw.picture || ''
+    };
+  };
+
+  const validateForm = (s) => {
+    const errs = {};
+    if (!s.fullName || s.fullName.length < 2) errs.fullName = 'Please enter a valid full name';
+    if (!s.email) errs.email = 'Email is required';
+    else if (!isValidEmail(s.email)) errs.email = 'Enter a valid email address';
+    if (s.salary) {
+      const n = Number(String(s.salary).replace(/[^0-9.-]+/g, ''));
+      if (Number.isNaN(n) || n < 0) errs.salary = 'Salary must be a positive number';
+    }
+    if (s.probationMonths) {
+      const pm = parseInt(s.probationMonths, 10);
+      if (Number.isNaN(pm) || pm < 0) errs.probationMonths = 'Enter a valid number of months';
+    }
+    if (s.startDate && !isValidDate(s.startDate)) errs.startDate = 'Start date is invalid';
+    if (s.password && s.password.length > 0 && s.password.length < 6) errs.password = 'Password must be at least 6 characters';
+    // sanitize phone to allow only digits and common symbols
+    if (s.phone && !/^\+?[0-9 ()-]{6,20}$/.test(s.phone)) errs.phone = 'Enter a valid phone number';
+    return errs;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // create a new employee object and store in sessionStorage
+    // sanitize data
+    const sanitized = sanitizeForm(form);
+    const validation = validateForm(sanitized);
+    if (Object.keys(validation).length) {
+      setErrors(validation);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     const existing = JSON.parse(sessionStorage.getItem('hrms_employees')) || employeesData || [];
 
     const genId = () => {
       if (form.employeeId) return form.employeeId;
-      // attempt to find numeric suffixes like EMP001
+      
       const nums = existing.map(e => {
         const m = (e.id || '').match(/(\d+)$/);
         return m ? parseInt(m[1], 10) : 0;
@@ -59,18 +129,35 @@ const CreateEmployee = () => {
 
     const newEmp = {
       id: genId(),
-      name: form.fullName || 'New Employee',
-      designation: form.jobTitle || '',
-      department: form.department || '',
-      dob: form.startDate || '',
-      image: form.picture || `https://i.pravatar.cc/150?u=${Date.now()}`,
+      name: sanitized.fullName || 'New Employee',
+      designation: sanitized.jobTitle || '',
+      department: sanitized.department || '',
+
+      hiredDate: sanitized.startDate || '',
+      startDate: sanitized.startDate || '',
+      email: sanitized.email || '',
+      phone: sanitized.phone || '',
+      // employment details
+      jobType: sanitized.employmentType || '',
+      employmentType: sanitized.employmentType || '',
+      manager: sanitized.manager || '',
+      location: sanitized.location || '',
+      address: sanitized.address || '',
+      role: sanitized.role || 'employee',
+      picture: sanitized.picture || `https://i.pravatar.cc/150?u=${Date.now()}`,
+      // salary details
+      salary: { basic: Number(sanitized.salary) || '', allowances: [], deductions: [] },
+      basicSalary: Number(sanitized.salary) || '',
+      allowances: [],
+      deductions: [],
     };
 
     const updated = [newEmp, ...existing];
     sessionStorage.setItem('hrms_employees', JSON.stringify(updated));
     console.log('Created employee (saved to session):', newEmp);
     setCreated(true);
-    // clear some fields
+  
+    setErrors({});
     setForm(prev => ({ ...prev, fullName: '', email: '', employeeId: '', jobTitle: '', department: '', startDate: '', picture: '' }));
   };
 
@@ -96,12 +183,13 @@ const CreateEmployee = () => {
                     <div className={adminStyles.inputWrapper}>
                       <label className={adminStyles.floatingLabel} htmlFor="fullName">Full name</label>
                       <input id="fullName" name="fullName" value={form.fullName} onChange={handleChange} placeholder="" className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} required />
+                      {errors.fullName && <div className={adminStyles.fieldError}>{errors.fullName}</div>}
                     </div>
                   </div>
 
                   <div className={`${adminStyles.inputGroup} ${form.picture ? adminStyles.filledGroup : ''}`}>
                     <div className={adminStyles.inputWrapper}>
-                      <label className={adminStyles.floatingLabel} htmlFor="picture">Photo</label>
+                      <label className={adminStyles.floatingLabel} htmlFor="picture"></label>
                       <input id="picture" name="picture" type="file" accept="image/*" onChange={handleFileChange} className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} />
                       {form.picture && <img src={form.picture} alt="preview" style={{marginTop:8, width:84, height:84, borderRadius:10, objectFit:'cover'}} />}
                     </div>
@@ -111,6 +199,7 @@ const CreateEmployee = () => {
                     <div className={adminStyles.inputWrapper}>
                       <label className={adminStyles.floatingLabel} htmlFor="email">Work email</label>
                       <input id="email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="" className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} required />
+                      {errors.email && <div className={adminStyles.fieldError}>{errors.email}</div>}
                     </div>
                   </div>
 
@@ -157,6 +246,7 @@ const CreateEmployee = () => {
                     <div className={adminStyles.inputWrapper}>
                       <label className={adminStyles.floatingLabel} htmlFor="startDate">Start date</label>
                       <input id="startDate" name="startDate" type="date" value={form.startDate} onChange={handleChange} className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} />
+                      {errors.startDate && <div className={adminStyles.fieldError}>{errors.startDate}</div>}
                     </div>
                   </div>
 
@@ -175,6 +265,7 @@ const CreateEmployee = () => {
                     <div className={adminStyles.inputWrapper}>
                       <label className={adminStyles.floatingLabel} htmlFor="phone">Phone</label>
                       <input id="phone" name="phone" value={form.phone} onChange={handleChange} placeholder="" className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} />
+                      {errors.phone && <div className={adminStyles.fieldError}>{errors.phone}</div>}
                     </div>
                   </div>
 
@@ -196,6 +287,7 @@ const CreateEmployee = () => {
                     <div className={adminStyles.inputWrapper}>
                       <label className={adminStyles.floatingLabel} htmlFor="salary">Salary (annual)</label>
                       <input id="salary" name="salary" type="number" value={form.salary} onChange={handleChange} placeholder="" className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} />
+                      {errors.salary && <div className={adminStyles.fieldError}>{errors.salary}</div>}
                     </div>
                   </div>
 
@@ -203,6 +295,7 @@ const CreateEmployee = () => {
                     <div className={adminStyles.inputWrapper}>
                       <label className={adminStyles.floatingLabel} htmlFor="probationMonths">Probation period (months)</label>
                       <input id="probationMonths" name="probationMonths" type="number" value={form.probationMonths} onChange={handleChange} placeholder="" className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} />
+                      {errors.probationMonths && <div className={adminStyles.fieldError}>{errors.probationMonths}</div>}
                     </div>
                   </div>
 
@@ -210,16 +303,11 @@ const CreateEmployee = () => {
                     <div className={adminStyles.inputWrapper}>
                       <label className={adminStyles.floatingLabel} htmlFor="password">Temporary password</label>
                       <input id="password" name="password" type="text" value={form.password} onChange={handleChange} placeholder="" className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} />
+                      {errors.password && <div className={adminStyles.fieldError}>{errors.password}</div>}
                     </div>
                   </div>
 
-                  <div className={`${adminStyles.inputGroup} ${form.autoGeneratePassword ? adminStyles.filledGroup : ''}`}>
-                    <label>
-                      <input type="checkbox" name="autoGeneratePassword" checked={form.autoGeneratePassword} onChange={(e) => setForm(prev => ({...prev, autoGeneratePassword: e.target.checked}))} />
-                      <span>Auto-generate password</span>
-                    </label>
-                  </div>
-
+                
                   <div className={`${adminStyles.inputGroup} ${form.sendInvite ? adminStyles.filledGroup : ''}`}>
                     <label>
                       <input type="checkbox" name="sendInvite" checked={form.sendInvite} onChange={(e) => setForm(prev => ({...prev, sendInvite: e.target.checked}))} /> Send invitation email

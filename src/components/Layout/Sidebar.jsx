@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 import { FiUsers, FiChevronDown, FiChevronRight, FiPlusCircle, FiArchive, FiList, FiFileText } from 'react-icons/fi';
-import { FiCalendar, FiClock, FiBook } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiBook, FiSettings, FiDollarSign } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
 const Sidebar = ({ collapsed = false, setCollapsed = () => { }, mobileOpen = false, setMobileOpen = () => { } }) => {
   const [employeeOpen, setEmployeeOpen] = useState(true);
   const [leaveOpen, setLeaveOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [payrollOpen, setPayrollOpen] = useState(false);
+  const appSettings = useSelector(s => s.settings || { siteName: 'HRMS Dashboard', logoUrl: '' });
   const loc = useLocation();
   const user = useSelector(s => s.auth.user);
 
@@ -19,8 +22,14 @@ const Sidebar = ({ collapsed = false, setCollapsed = () => { }, mobileOpen = fal
     <>
       <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''} ${mobileOpen ? styles.mobileOpen : ''}`}>
         <div className={styles.brand}>
-          <div className={styles.brandLogo}>HR</div>
-          {!collapsed && <div className={styles.brandText}>HRMS Dashboard</div>}
+          <div className={styles.brandLogo}>
+            {appSettings.logoUrl ? (
+              <img src={appSettings.logoUrl} alt={appSettings.siteName} style={{ height: 28, objectFit: 'contain' }} />
+            ) : (
+              'HR'
+            )}
+          </div>
+          {!collapsed && <div className={styles.brandText}>{appSettings.siteName || 'HRMS Dashboard'}</div>}
           <button className={styles.toggleBtn} onClick={onToggle} aria-label="Toggle sidebar">{collapsed ? '›' : '‹'}</button>
         </div>
 
@@ -66,17 +75,37 @@ const Sidebar = ({ collapsed = false, setCollapsed = () => { }, mobileOpen = fal
             )}
           </div>
 
+          {user?.role === 'admin' && (
+            <div className={styles.menuSection}>
+              <div className={styles.sectionHeader} onClick={() => setSettingsOpen(s => !s)}>
+                <div className={styles.sectionTitle}><FiSettings />{!collapsed && <span>Settings</span>}</div>
+                {!collapsed && <div>{settingsOpen ? <FiChevronDown /> : <FiChevronRight />}</div>}
+              </div>
+
+              {settingsOpen && (
+                <div className={styles.submenu}>
+                  <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/admin/settings') ? styles.active : ''}`} to="/admin/settings"><FiSettings /> {!collapsed && 'General Settings'}</Link></div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className={styles.menuSection}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.sectionTitle}><span>Payroll</span></div>
+            <div className={styles.sectionHeader} onClick={() => setPayrollOpen ? setPayrollOpen(s => !s) : null}>
+              <div className={styles.sectionTitle}><FiDollarSign />{!collapsed && <span>Payroll</span>}</div>
+              {!collapsed && <div>{typeof payrollOpen !== 'undefined' && (payrollOpen ? <FiChevronDown /> : <FiChevronRight />)}</div>}
             </div>
 
-          </div>
-
-          <div className={styles.menuSection}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.sectionTitle}><span>Reports</span></div>
-            </div>
+            {typeof payrollOpen !== 'undefined' && payrollOpen && (
+              <div className={styles.submenu}>
+                {(user?.role === 'admin' || user?.role === 'hr') && (
+                  <>
+                    <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/payroll/generate') ? styles.active : ''}`} to="/payroll/generate"><FiDollarSign /> {!collapsed && 'Salary generation'}</Link></div>
+                    <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/payroll/manage') ? styles.active : ''}`} to="/payroll/manage"><FiList /> {!collapsed && 'Manage employee salary'}</Link></div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
         </nav>

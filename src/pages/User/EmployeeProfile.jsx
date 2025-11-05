@@ -93,7 +93,7 @@ const EmployeeProfile = () => {
     <div className={styles.container}>
       <Link to="/leave/requests" className={styles.backBtn} aria-label="Back to requests"><FiArrowLeft /></Link>
       <div className={styles.cover}>
-        {/* place the edit icon inside the cover/banner (top-right) */}
+        
         {(user && (user.role === 'admin' || user.role === 'hr')) ? (
           <button className={styles.editBtn} title="Edit employment" onClick={() => setEditing(true)}><FiEdit /></button>
         ) : (user && user.id === profile.id) ? (

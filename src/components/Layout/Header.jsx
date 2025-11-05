@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearUser } from '../../store/authSlice';
 import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
-import { FiMoon, FiSun, FiMenu } from 'react-icons/fi';
+import { FiMoon, FiSun } from 'react-icons/fi';
 
-const Header = ({ onMenuClick = () => {} }) => {
+const Header = () => {
   const user = useSelector(s => s.auth.user);
   const dispatch = useDispatch();
 
@@ -21,9 +21,6 @@ const Header = ({ onMenuClick = () => {} }) => {
   return (
     <header className={`${styles.header} ${theme === 'dark' ? styles.darkHeader : ''}`}>
       <div style={{display:'flex',alignItems:'center',gap:12}}>
-        <button onClick={onMenuClick} aria-label="open menu" className={styles.themeBtn} style={{display:'inline-flex', alignItems:'center', justifyContent:'center'}}>
-          <FiMenu />
-        </button>
         <div className={styles.brand}>
           <Link to="/">
             {settings.logoUrl ? (

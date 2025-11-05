@@ -10,6 +10,7 @@ const Header = ({ onMenuClick = () => {} }) => {
   const dispatch = useDispatch();
 
   const [theme, setTheme] = useState(() => localStorage.getItem('hrms_theme') || 'light');
+  const settings = useSelector(s => s.settings || { siteName: 'HRMS', logoUrl: '' });
 
   useEffect(() => {
     const body = document.body;
@@ -23,7 +24,15 @@ const Header = ({ onMenuClick = () => {} }) => {
         <button onClick={onMenuClick} aria-label="open menu" className={styles.themeBtn} style={{display:'inline-flex', alignItems:'center', justifyContent:'center'}}>
           <FiMenu />
         </button>
-        <div className={styles.brand}><Link to="/">HRMS</Link></div>
+        <div className={styles.brand}>
+          <Link to="/">
+            {settings.logoUrl ? (
+              <img src={settings.logoUrl} alt={settings.siteName || 'logo'} style={{height:28, objectFit:'contain'}} />
+            ) : (
+              settings.siteName || 'HRMS'
+            )}
+          </Link>
+        </div>
       </div>
 
       <div className={styles.right}>

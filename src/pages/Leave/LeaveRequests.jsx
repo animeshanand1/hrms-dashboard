@@ -242,7 +242,12 @@ const LeaveRequests = () => {
 
       {!user && <div style={{marginBottom:12,color:'#92400e',background:'#fff7ed',padding:10,borderRadius:8}}>You are not signed in. Requests will be saved for this session only.</div>}
 
-      <form onSubmit={createRequest} className={styles.formCard}>
+      {role === 'admin' ? (
+        <div className={styles.infoCard} style={{marginBottom:12, padding:12, borderRadius:8, background:'#eef2ff', color:'#1e3a8a'}}>
+          Creating leave requests is disabled for admin users. To create a request on behalf of an employee, use their profile or impersonation tools.
+        </div>
+      ) : (
+        <form onSubmit={createRequest} className={styles.formCard}>
         <div className={styles.formInner}>
           <div className={styles.field}>
             <label className={styles.meta}>From <span style={{color:'#ef4444'}}>*</span></label>
@@ -277,7 +282,8 @@ const LeaveRequests = () => {
         <div className={styles.formActions}>
           <button type="submit" disabled={!isCreateFormValid()} className={styles.createBtn}><FiPlus /> Create</button>
         </div>
-      </form>
+        </form>
+      )}
       {error && <div className={styles.errorMsg}>{error}</div>}
 
       <div className={styles.listGrid}>

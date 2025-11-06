@@ -244,7 +244,7 @@ const LeaveRequests = () => {
 
       {role === 'admin' ? (
         <div className={styles.infoCard} style={{marginBottom:12, padding:12, borderRadius:8, background:'#eef2ff', color:'#1e3a8a'}}>
-          Creating leave requests is disabled for admin users. To create a request on behalf of an employee, use their profile or impersonation tools.
+          Creating leave requests is disabled for admin users. To create a request on behalf of an employee, use their profile.
         </div>
       ) : (
         <form onSubmit={createRequest} className={styles.formCard}>

@@ -1,0 +1,33 @@
+.select {
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6eef8;
+  background: #ffffff;
+  color: #111827;
+  min-width: 170px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.select:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
+  border-color: #6366f1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .select {
+    background: #111827;
+    color: #e5e7eb;
+    border: 1px solid #374151;
+  }
+  .select:focus {
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
+    border-color: #8b5cf6;
+  }
+}
+
+body.dark .select, :root.dark .select {
+  background: #111827;
+  color: #e5e7eb;
+  border: 1px solid #374151;
+}

@@ -3,6 +3,7 @@ import employeesData from '../../data/employees.json';
 import EmployeeCard from '../../components/Admin/EmployeeCard';
 import styles from '../../components/Admin/EmployeeCard.module.css';
 import QuickEditModal from '../../components/Common/QuickEditModal';
+import localStyles from './EmployeeList.module.css';
 
 const EmployeeList = () => {
   const [loading, setLoading] = useState(true);
@@ -120,7 +121,7 @@ const EmployeeList = () => {
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, height: 'calc(100vh - 40px)', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
       <h2>All employees</h2>
 
       <div style={{ display: 'flex', gap: 12, marginTop: 12, alignItems: 'center' }}>
@@ -143,7 +144,7 @@ const EmployeeList = () => {
 
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ color: '#6b7280', fontSize: 14 }}>{filtered.length} shown</div>
-          <select value={dept} onChange={e => setDept(e.target.value)} style={{ padding: '9px 12px', borderRadius: 10, border: '1px solid #e6eef8', background: '#fff', minWidth: 170 }}>
+          <select value={dept} onChange={e => setDept(e.target.value)} className={localStyles.select}>
             {departments.map(d => (
               <option key={d} value={d}>{d === 'all' ? 'All departments' : d}</option>
             ))}
@@ -151,38 +152,41 @@ const EmployeeList = () => {
         </div>
       </div>
 
-      {loading ? (
-        <div className={styles.cardGrid}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className={`${styles.card} ${styles.skeleton}`}>
-              <div className={styles.skelAvatar} />
-              <div style={{ flex: 1 }}>
-                <div className={styles.skelLine} style={{ width: '60%' }} />
-                <div className={styles.skelLine} style={{ width: '40%', marginTop: 8 }} />
+      
+      <div style={{ marginTop: 12, flex: 1, overflowY: 'auto', paddingRight: 8 }}>
+        {loading ? (
+          <div className={styles.cardGrid}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className={`${styles.card} ${styles.skeleton}`}>
+                <div className={styles.skelAvatar} />
+                <div style={{ flex: 1 }}>
+                  <div className={styles.skelLine} style={{ width: '60%' }} />
+                  <div className={styles.skelLine} style={{ width: '40%', marginTop: 8 }} />
+                </div>
+                <div style={{ width: 60 }} />
               </div>
-              <div style={{ width: 60 }} />
-            </div>
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
-        <div style={{ padding: 40, textAlign: 'center', color: '#6b7280' }}>
-          <h3>No employees found</h3>
-          <p>Try clearing filters or add new employees.</p>
-          <button onClick={() => { setSearch(''); setDept('all'); }} style={{ marginTop: 12, padding: '8px 12px', borderRadius: 8, background: '#6366f1', color: '#fff', border: 'none' }}>Clear filters</button>
-        </div>
-      ) : (
-        <div className={styles.cardGrid}>
-          {filtered.map(emp => (
-            <EmployeeCard
-              key={emp.id}
-              employee={emp}
-              onEdit={() => handleEdit(emp)}
-              onArchive={() => handleArchive(emp.id)}
-              onView={() => handleView(emp)}
-            />
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div style={{ padding: 40, textAlign: 'center', color: '#6b7280' }}>
+            <h3>No employees found</h3>
+            <p>Try clearing filters or add new employees.</p>
+            <button onClick={() => { setSearch(''); setDept('all'); }} style={{ marginTop: 12, padding: '8px 12px', borderRadius: 8, background: '#6366f1', color: '#fff', border: 'none' }}>Clear filters</button>
+          </div>
+        ) : (
+          <div className={styles.cardGrid}>
+            {filtered.map(emp => (
+              <EmployeeCard
+                key={emp.id}
+                employee={emp}
+                onEdit={() => handleEdit(emp)}
+                onArchive={() => handleArchive(emp.id)}
+                onView={() => handleView(emp)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
 
       {modalOpen && selected && (
         <QuickEditModal

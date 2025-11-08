@@ -21,20 +21,29 @@ const Calendar = () => {
     try {
       return JSON.parse(sessionStorage.getItem('hrms_working_days') || '[1,2,3,4,5]');
     } catch {
-      return [1, 2, 3, 4, 5]; // Monday to Friday by default
+      return [1, 2, 3, 4, 5]; 
     }
   });
   const [attendance, setAttendance] = useState(() => {
     try {
-      return JSON.parse(sessionStorage.getItem(`hrms_attendance_${user?.id}`) || '[]');
+      const raw = JSON.parse(sessionStorage.getItem(`hrms_attendance_${user?.id}`) || 'null');
+      
+      if (Array.isArray(raw)) return raw;
+      if (!raw) return [];
+      if (typeof raw === 'string') return [raw];
+      if (typeof raw === 'object') {
+        if (raw.date) return [raw.date];
+        
+        return Object.keys(raw);
+      }
+      return [];
     } catch {
       return [];
     }
   });
   const [leaves, setLeaves] = useState(() => {
     try {
-      // calendar expects an object mapping date -> leaveType
-      const stored = sessionStorage.getItem(`hrms_leaves_${user?.id}`);
+     const stored = sessionStorage.getItem(`hrms_leaves_${user?.id}`);
       if (stored) {
         return JSON.parse(stored || '{}') || {};
       }
@@ -82,8 +91,11 @@ const Calendar = () => {
   }, [workingDays]);
 
   useEffect(() => {
-    if (user?.id && attendance.length) {
-      sessionStorage.setItem(`hrms_attendance_${user.id}`, JSON.stringify(attendance));
+    if (user?.id) {
+      
+      const toSave = Array.isArray(attendance) ? attendance : [];
+      if (toSave.length) sessionStorage.setItem(`hrms_attendance_${user.id}`, JSON.stringify(toSave));
+      else sessionStorage.removeItem(`hrms_attendance_${user.id}`);
     }
   }, [attendance, user?.id]);
 

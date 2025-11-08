@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
-import { FiUsers, FiChevronDown, FiChevronRight, FiPlusCircle, FiArchive, FiList, FiFileText } from 'react-icons/fi';
+import { FiUsers, FiChevronDown, FiChevronRight, FiPlusCircle, FiArchive, FiList, FiFileText, FiUserPlus } from 'react-icons/fi';
 import { FiCalendar, FiClock, FiBook, FiSettings, FiDollarSign } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
@@ -51,6 +51,21 @@ const Sidebar = ({ collapsed = false, setCollapsed = () => { }, mobileOpen = fal
                   <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/admin/attendance') ? styles.active : ''}`} to="/admin/attendance"><FiCalendar /> {!collapsed && 'Attendance Records'}</Link></div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Talent Acquisition - visible to admin and hr */}
+          {(user?.role === 'admin' || user?.role === 'hr') && (
+            <div className={styles.menuSection}>
+              <div className={styles.sectionHeader}>
+                <div className={styles.sectionTitle}><FiUserPlus />{!collapsed && <span>Talent Acquisition</span>}</div>
+              </div>
+
+              <div className={styles.submenu}>
+                <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/talent/jobs') ? styles.active : ''}`} to="/talent/jobs"><FiList /> {!collapsed && 'Job Openings'}</Link></div>
+                <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/talent/pipeline') ? styles.active : ''}`} to="/talent/pipeline"><FiClock /> {!collapsed && 'Candidate Pipeline'}</Link></div>
+                <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/talent/onboarding') ? styles.active : ''}`} to="/talent/onboarding"><FiFileText /> {!collapsed && 'Onboarding'}</Link></div>
+              </div>
             </div>
           )}
 

@@ -11,7 +11,6 @@ import LeaveRequests from './pages/Leave/LeaveRequests'
 import AttendanceList from './pages/Leave/AttendanceList'
 import AdminAttendanceList from './pages/Admin/AttendenceList'
 import LeavePolicies from './pages/Leave/LeavePolicies'
-import LeaveDashboard from './pages/User/LeaveDashboard'
 import MonthlySummary from './pages/User/MonthlySummary'
 import CalendarManagement from './pages/Leave/CalendarManagement'
 import GeneralSettings from './pages/Admin/GeneralSettings'
@@ -58,7 +57,7 @@ function AppContent() {
               </RoleRoute>
             } />
             <Route path="/leave/attendance" element={
-              <RoleRoute allowedRoles={["employee"]}>
+              <RoleRoute allowedRoles={["employee","admin","hr"]}>
                 <AttendanceList adminView={false} />
               </RoleRoute>
             } />
@@ -83,11 +82,7 @@ function AppContent() {
                 <GeneralSettings />
               </RoleRoute>
             } />
-            <Route path="/my/leave" element={
-              <RoleRoute allowedRoles={["employee","admin","hr"]}>
-                <LeaveDashboard />
-              </RoleRoute>
-            } />
+            {/* /my/leave removed: LeaveDashboard component deleted */}
             <Route path="/my/monthly-summary" element={
               <RoleRoute allowedRoles={["employee"]}>
                 <MonthlySummary />

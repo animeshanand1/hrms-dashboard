@@ -55,7 +55,7 @@
 
 .sideSection {
   max-height: calc(100vh - 120px);
-  overflow: hidden;
+  overflow: auto; 
 }
 
 .header {
@@ -631,6 +631,6 @@
   box-shadow: 0 6px 14px rgba(2,6,23,0.04);
   width: 100%;
   margin: 0;
-  overflow: hidden;
-  max-height: 380px; 
+  overflow: auto;
+  max-height: calc(100vh - 200px);
 }

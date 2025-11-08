@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styles from './LeavePolicies.module.css';
 
 const initialPolicies = [
@@ -32,6 +33,10 @@ const initialPolicies = [
 ];
 
 const LeavePolicies = () => {
+  const user = useSelector((s) => s.auth.user);
+  const role = user?.role || 'guest';
+  const canManage = role === 'admin' || role === 'hr';
+
   const [policies, setPolicies] = useState(initialPolicies);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
@@ -57,12 +62,17 @@ const LeavePolicies = () => {
   }, [policies, search, category]);
 
   function openAdd() {
+    if (!canManage) return;
     setForm({ title: '', category: 'Leave', effectiveDate: '', description: '', url: '' });
     setAdding(true);
   }
 
   function submitAdd(e) {
     e.preventDefault();
+    if (!canManage) {
+      setAdding(false);
+      return;
+    }
     const next = {
       id: Date.now(),
       title: form.title || 'Untitled Policy',
@@ -96,9 +106,11 @@ const LeavePolicies = () => {
             </option>
           ))}
         </select>
-        <button className={styles.primary} onClick={openAdd}>
-          + New Policy
-        </button>
+        {canManage && (
+          <button className={styles.primary} onClick={openAdd}>
+            + New Policy
+          </button>
+        )}
       </div>
 
       <ul className={styles.list}>
@@ -147,7 +159,7 @@ const LeavePolicies = () => {
         </div>
       )}
 
-      {adding && (
+      {adding && canManage && (
         <div className={styles.modalBackdrop} onClick={() => setAdding(false)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <h3>Create Policy</h3>

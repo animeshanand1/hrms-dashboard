@@ -1,5 +1,5 @@
 
-import React,{ useState } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import styles from './LoginPage.module.css';
@@ -13,6 +13,10 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [remember, setRemember] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -21,17 +25,92 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // load remembered credentials on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('hrms_remember');
+      if (raw) {
+        const obj = JSON.parse(raw);
+        if (obj && obj.email) setEmail(obj.email || '');
+        if (obj && obj.password) setPassword(obj.password || '');
+        setRemember(true);
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
   // Quick demo sign-in for testing routes 
   const demoLogin = (role) => {
     const user = demoUsers[role];
     if (!user) return;
-    // ensure a stable id exists for user objects
+    
     if (!user.id) user.id = `u_${role}_${Date.now()}`;
     dispatch(setUser(user));
     // navigate based on role
-    if (user.role === 'admin') navigate('/admin/create-employee');
-    else if (user.role === 'hr') navigate('/admin/employees');
-    else navigate('/my/leave');
+  if (user.role === 'admin') navigate('/admin/create-employee');
+  else if (user.role === 'hr') navigate('/admin/employees');
+    else navigate('/my/monthly-summary');
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError('');
+
+    const targetEmail = (email || '').toLowerCase().trim();
+    const targetPassword = password || '';
+
+    // check session-stored employees first (created by admin)
+    const stored = JSON.parse(sessionStorage.getItem('hrms_employees')) || [];
+    const match = stored.find(u => (u.email || '').toLowerCase() === targetEmail);
+
+    if (match) {
+      
+      if (match.password && match.password.length > 0) {
+        if (match.password === targetPassword) {
+          // ensure id exists
+          if (!match.id) match.id = `EMP_${Date.now()}`;
+          dispatch(setUser({ id: match.id, name: match.name, email: match.email, role: match.role || 'employee', department: match.department, image: match.picture }));
+          // persist credentials if requested
+          try {
+            if (remember) {
+              localStorage.setItem('hrms_remember', JSON.stringify({ email: match.email, password: match.password }));
+            } else {
+              localStorage.removeItem('hrms_remember');
+            }
+          } catch (err) { console.error('Storage error', err); }
+
+          if (match.role === 'admin') navigate('/admin/create-employee');
+          else if (match.role === 'hr') navigate('/admin/employees');
+          else navigate('/my/monthly-summary');
+          return;
+        }
+        setError('Invalid email or password');
+        return;
+      }
+
+      if (!match.password) {
+        dispatch(setUser({ id: match.id || `EMP_${Date.now()}`, name: match.name, email: match.email, role: match.role || 'employee', department: match.department, image: match.picture }));
+        // if user chose to remember, save email only (no password stored on record)
+        try {
+          if (remember) {
+            localStorage.setItem('hrms_remember', JSON.stringify({ email: match.email, password: '' }));
+          } else {
+            localStorage.removeItem('hrms_remember');
+          }
+        } catch (err) { console.error('Storage error', err); }
+
+        if (match.role === 'admin') navigate('/admin/create-employee');
+        else if (match.role === 'hr') navigate('/admin/employees');
+        else navigate('/my/monthly-summary');
+        return;
+      }
+
+      setError('Invalid email or password');
+      return;
+    }
+
+    setError('Invalid email or password');
   };
   const settings = useSelector(s => s.settings || { siteName: 'Your Company', logoUrl: '', tagline: 'People-first HR management' });
 
@@ -72,14 +151,14 @@ const LoginPage = () => {
               <button type="button" onClick={() => demoLogin('employee')} className="btn">Demo Employee</button>
             </div>
 
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className={styles.inputGroup}>
                 <label htmlFor="email">Work email</label>
                 <div className={styles.inputWrapper}>
                   <span className={styles.inputIcon}>
                     <FiMail size={16} />
                   </span>
-                  <input type="email" id="email" name="email" placeholder="name@company.com" className={`${styles.inputField} px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500`} />
+                  <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" name="email" placeholder="name@company.com" className={`${styles.inputField} px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500`} />
                 </div>
               </div>
 
@@ -89,18 +168,26 @@ const LoginPage = () => {
                   <span className={styles.inputIcon}>
                     <FiLock size={16} />
                   </span>
-                  <input type={passwordVisible ? "text" : "password"} id="password" name="password" placeholder="••••••••" className={`${styles.inputField} px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500`} />
+                  <input value={password} onChange={(e) => setPassword(e.target.value)} type={passwordVisible ? "text" : "password"} id="password" name="password" placeholder="••••••••" className={`${styles.inputField} px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500`} />
                   <span className={styles.visibilityIcon} onClick={togglePasswordVisibility}>
                     {passwordVisible ? <FiEyeOff size={16} /> : <FiEye size={16} />}
                   </span>
                 </div>
               </div>
 
+              {error && <div style={{color:'var(--red, #e11d48)', marginBottom:8}}>{error}</div>}
+
               <div className={styles.options}>
-                <div className={styles.rememberMe}>
-                  <input type="checkbox" id="remember" name="remember" />
-                  <label htmlFor="remember">Remember me</label>
-                </div>
+                  <div className={styles.rememberMe}>
+                    <input type="checkbox" id="remember" name="remember" checked={remember} onChange={(e) => {
+                      const v = !!e.target.checked;
+                      setRemember(v);
+                      if (!v) {
+                        try { localStorage.removeItem('hrms_remember'); } catch { }
+                      }
+                    }} />
+                    <label htmlFor="remember">Remember me</label>
+                  </div>
                 <Link to="/forgot" className={styles.forgotPassword}>Forgot password?</Link>
               </div>
 

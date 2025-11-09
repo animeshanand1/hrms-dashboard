@@ -17,7 +17,6 @@ const CreateEmployee = () => {
     phone: '',
     address: '',
     startDate: '',
-    salary: '',
     probationMonths: '',
     password: '',
     sendInvite: true,
@@ -75,7 +74,6 @@ const CreateEmployee = () => {
       phone: sanitizeString(raw.phone),
       address: sanitizeString(raw.address),
       startDate: sanitizeString(raw.startDate),
-      salary: sanitizeString(raw.salary),
       probationMonths: sanitizeString(raw.probationMonths),
       password: sanitizeString(raw.password),
       sendInvite: !!raw.sendInvite,
@@ -88,10 +86,6 @@ const CreateEmployee = () => {
     if (!s.fullName || s.fullName.length < 2) errs.fullName = 'Please enter a valid full name';
     if (!s.email) errs.email = 'Email is required';
     else if (!isValidEmail(s.email)) errs.email = 'Enter a valid email address';
-    if (s.salary) {
-      const n = Number(String(s.salary).replace(/[^0-9.-]+/g, ''));
-      if (Number.isNaN(n) || n < 0) errs.salary = 'Salary must be a positive number';
-    }
     if (s.probationMonths) {
       const pm = parseInt(s.probationMonths, 10);
       if (Number.isNaN(pm) || pm < 0) errs.probationMonths = 'Enter a valid number of months';
@@ -145,12 +139,17 @@ const CreateEmployee = () => {
       address: sanitized.address || '',
       role: sanitized.role || 'employee',
       picture: sanitized.picture || `https://i.pravatar.cc/150?u=${Date.now()}`,
-      // salary details
-      salary: { basic: Number(sanitized.salary) || '', allowances: [], deductions: [] },
-      basicSalary: Number(sanitized.salary) || '',
-      allowances: [],
-      deductions: [],
+      
+      password: sanitized.password || '',
+ 
     };
+
+    if (!newEmp.password) {
+      const temp = Math.random().toString(36).slice(-8);
+      newEmp.password = temp;
+      
+      console.log('Temporary password for new employee:', newEmp.email, temp);
+    }
 
     const updated = [newEmp, ...existing];
     sessionStorage.setItem('hrms_employees', JSON.stringify(updated));
@@ -283,13 +282,7 @@ const CreateEmployee = () => {
                     </div>
                   </div>
 
-                  <div className={`${adminStyles.inputGroup} ${form.salary ? adminStyles.filledGroup : ''}`}>
-                    <div className={adminStyles.inputWrapper}>
-                      <label className={adminStyles.floatingLabel} htmlFor="salary">Salary (annual)</label>
-                      <input id="salary" name="salary" type="number" value={form.salary} onChange={handleChange} placeholder="" className={`${adminStyles.inputField} ${adminStyles.fullWidthInput} ${adminStyles.padForLegend}`} />
-                      {errors.salary && <div className={adminStyles.fieldError}>{errors.salary}</div>}
-                    </div>
-                  </div>
+                  {/* Salary removed from create employee form */}
 
                   <div className={`${adminStyles.inputGroup} ${form.probationMonths ? adminStyles.filledGroup : ''}`}>
                     <div className={adminStyles.inputWrapper}>

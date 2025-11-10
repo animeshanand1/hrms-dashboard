@@ -4,6 +4,7 @@ import styles from './EmployeeProfile.module.css';
 import demoUsers from '../../data/demoUsers.json';
 import employeesData from '../../data/employees.json';
 import QuickEditModal from '../../components/Common/QuickEditModal';
+import ChangePasswordModal from '../../components/Common/ChangePasswordModal';
 import { FiArrowLeft, FiEdit } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
@@ -11,6 +12,7 @@ const EmployeeProfile = () => {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [changePwd, setChangePwd] = useState(false);
   const user = useSelector(s => s.auth.user);
 
   useEffect(() => {
@@ -97,7 +99,10 @@ const EmployeeProfile = () => {
         {(user && (user.role === 'admin' || user.role === 'hr')) ? (
           <button className={styles.editBtn} title="Edit employment" onClick={() => setEditing(true)}><FiEdit /></button>
         ) : (user && user.id === profile.id) ? (
-          <button className={styles.editBtn} title="Edit contact" onClick={() => setEditing(true)}><FiEdit /></button>
+            <>
+              <button className={styles.editBtn} title="Edit contact" onClick={() => setEditing(true)}><FiEdit /></button>
+              <button className={styles.editBtn} title="Change password" onClick={() => setChangePwd(true)} style={{ right: 56 }}>🔒</button>
+            </>
         ) : null}
       </div>
       <div className={styles.profileHeader}>
@@ -185,6 +190,25 @@ const EmployeeProfile = () => {
             } catch {}
             setProfile(updated);
             setEditing(false);
+          }}
+        />
+      )}
+      {changePwd && (
+        <ChangePasswordModal
+          employee={profile}
+          onClose={() => setChangePwd(false)}
+          onSave={(updated) => {
+            try { sessionStorage.setItem(`hrms_user_profile_${profile.id}`, JSON.stringify(updated)); } catch {}
+            try {
+              const empsRaw = sessionStorage.getItem('hrms_employees') || JSON.stringify(employeesData || []);
+              const emps = JSON.parse(empsRaw);
+              const idx = emps.findIndex(e => e.id === profile.id || e.email === profile.id);
+              if (idx !== -1) { emps[idx] = { ...emps[idx], ...updated }; }
+              else { emps.push(updated); }
+              sessionStorage.setItem('hrms_employees', JSON.stringify(emps));
+            } catch {}
+            setProfile(updated);
+            setChangePwd(false);
           }}
         />
       )}

@@ -11,6 +11,9 @@ import LeaveRequests from './pages/Leave/LeaveRequests'
 import AttendanceList from './pages/Leave/AttendanceList'
 import AdminAttendanceList from './pages/Admin/AttendenceList'
 import LeavePolicies from './pages/Leave/LeavePolicies'
+import JobOpenings from './pages/TalentAcquisition/JobOpenings'
+import CandidatePipeline from './pages/TalentAcquisition/CandidatePipeline'
+import Onboarding from './pages/TalentAcquisition/Onboarding'
 import MonthlySummary from './pages/User/MonthlySummary'
 import CalendarManagement from './pages/Leave/CalendarManagement'
 import GeneralSettings from './pages/Admin/GeneralSettings'
@@ -62,6 +65,21 @@ function AppContent() {
               </RoleRoute>
             } />
             <Route path="/leave/policies" element={<LeavePolicies />} />
+            <Route path="/talent/jobs" element={
+              <RoleRoute allowedRoles={["admin","hr"]}>
+                <JobOpenings />
+              </RoleRoute>
+            } />
+            <Route path="/talent/pipeline" element={
+              <RoleRoute allowedRoles={["admin","hr"]}>
+                <CandidatePipeline />
+              </RoleRoute>
+            } />
+            <Route path="/talent/onboarding" element={
+              <RoleRoute allowedRoles={["admin","hr"]}>
+                <Onboarding />
+              </RoleRoute>
+            } />
             <Route path="/payroll/generate" element={
               <RoleRoute allowedRoles={["admin","hr"]}>
                 <SalaryGeneration />
@@ -82,7 +100,7 @@ function AppContent() {
                 <GeneralSettings />
               </RoleRoute>
             } />
-            {/* /my/leave removed: LeaveDashboard component deleted */}
+            
             <Route path="/my/monthly-summary" element={
               <RoleRoute allowedRoles={["employee"]}>
                 <MonthlySummary />

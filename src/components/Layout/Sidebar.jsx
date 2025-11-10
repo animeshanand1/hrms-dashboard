@@ -33,6 +33,21 @@ const Sidebar = ({ collapsed = false, setCollapsed = () => { }, mobileOpen = fal
           <button className={styles.toggleBtn} onClick={onToggle} aria-label="Toggle sidebar">{collapsed ? '›' : '‹'}</button>
         </div>
 
+        {user && (
+          <div style={{ padding: 8, paddingLeft: 12 }}>
+            <Link to={`/employee/${user.id}`} className={styles.link} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, overflow: 'hidden', background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {user.image ? (
+                  <img src={user.image} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <div style={{ fontWeight: 700, color: '#2563eb' }}>{(user.name || '')[0]}</div>
+                )}
+              </div>
+              {!collapsed && <div style={{ fontSize: 14, fontWeight: 600, color: '#0f172a' }}>{user.name}</div>}
+            </Link>
+          </div>
+        )}
+
         <nav className={styles.menu}>
           {/* Employee admin section - only visible to admin and hr roles */}
           {user && user.role !== 'employee' && (
@@ -118,6 +133,11 @@ const Sidebar = ({ collapsed = false, setCollapsed = () => { }, mobileOpen = fal
                     <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/payroll/generate') ? styles.active : ''}`} to="/payroll/generate"><FiDollarSign /> {!collapsed && 'Salary generation'}</Link></div>
                     <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/payroll/manage') ? styles.active : ''}`} to="/payroll/manage"><FiList /> {!collapsed && 'Manage employee salary'}</Link></div>
                   </>
+                )}
+
+                {/* allow employees to access the read-only payslips view */}
+                {user?.role === 'employee' && (
+                  <div className={styles.subItem}><Link className={`${styles.link} ${isActive('/admin/payslips') ? styles.active : ''}`} to="/admin/payslips"><FiFileText /> {!collapsed && 'My Payslips'}</Link></div>
                 )}
               </div>
             )}

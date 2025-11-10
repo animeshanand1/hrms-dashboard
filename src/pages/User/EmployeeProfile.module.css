@@ -9,12 +9,8 @@
 }
 
 .globalActions {
-    position: absolute;
-    top: 12px;
-    right: 12px;
     display: flex;
     gap: 8px;
-    z-index: 1400;
 }
 
 .header {
@@ -211,7 +207,7 @@
     display: flex;
     align-items: flex-end;
     gap: 18px;
-    padding: 12px 0 0 0;
+    padding: 12px 0 12px 0;
 }
 
 .avatarWrap {
@@ -260,7 +256,9 @@
     background: #fff;
     color: #0f172a;
     box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
-    text-decoration: none
+    text-decoration: none;
+    z-index: 6000;
+    pointer-events: auto;
 }
 
 .backBtn:hover {
@@ -346,9 +344,8 @@
     font-weight: 700
 }
 
-/* place edit icon inside the cover/banner */
 .cover {
-    position: relative; /* ensure absolutely positioned children are relative to cover */
+    position: relative;
 }
 
 .cover .editBtn {
@@ -358,7 +355,6 @@
     z-index: 20;
 }
 
-/* tags under name appear prominent */
 .stat {
     background: #eef2ff;
     color: #0f172a;
